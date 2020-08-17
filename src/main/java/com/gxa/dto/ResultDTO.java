@@ -25,6 +25,11 @@ public class ResultDTO {
         this.data = data;
     }
 
+    public ResultDTO(Integer code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
     public Integer getCode() {
         return code;
     }

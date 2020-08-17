@@ -19,7 +19,7 @@ public class LoginInterceptor  implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         //拦截器的逻辑代码
-         System.out.printf("拦截到了！");
+//         System.out.printf("拦截到了！");
          //通过判断session会话中保存的数据，来确定是否登录
         //1.先获取session对象
         HttpSession session= httpServletRequest.getSession();

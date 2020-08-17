@@ -20,98 +20,110 @@
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  
+
   <body>
-    <div class="x-body layui-anim layui-anim-up">
-        <form class="layui-form">
+  <div class="x-body layui-anim layui-anim-up">
+      <form class="layui-form">
           <div class="layui-form-item">
               <label for="L_email" class="layui-form-label">
-                  <span class="x-red">*</span>邮箱
+                  <span class="x-red">*</span>课程名字
               </label>
               <div class="layui-input-inline">
-                  <input type="text" id="L_email" name="email" required="" lay-verify="email"
-                  autocomplete="off" class="layui-input">
+                  <input type="text" id="L_email" name="courseName" required="" lay-verify="courseName"
+                         autocomplete="off" class="layui-input">
               </div>
               <div class="layui-form-mid layui-word-aux">
-                  <span class="x-red">*</span>将会成为您唯一的登入名
               </div>
           </div>
           <div class="layui-form-item">
               <label for="L_username" class="layui-form-label">
-                  <span class="x-red">*</span>昵称
+                  <span class="x-red">*</span>课程价格
               </label>
               <div class="layui-input-inline">
-                  <input type="text" id="L_username" name="username" required="" lay-verify="nikename"
-                  autocomplete="off" class="layui-input">
+                  <input type="number" value="100" id="L_username" name="coursePrice" required="" lay-verify="coursePrice"
+                         autocomplete="off" class="layui-input">
               </div>
           </div>
           <div class="layui-form-item">
               <label for="L_pass" class="layui-form-label">
-                  <span class="x-red">*</span>密码
+                  <span class="x-red">*</span>课程课时
               </label>
               <div class="layui-input-inline">
-                  <input type="password" id="L_pass" name="pass" required="" lay-verify="pass"
-                  autocomplete="off" class="layui-input">
-              </div>
-              <div class="layui-form-mid layui-word-aux">
-                  6到16个字符
+                  <input type="number" value="10" id="L_pass" name="courseCount" required="" lay-verify="courseCount"
+                         autocomplete="off" class="layui-input">
               </div>
           </div>
           <div class="layui-form-item">
-              <label for="L_repass" class="layui-form-label">
-                  <span class="x-red">*</span>确认密码
+              <label class="layui-form-label">
+                  <span class="x-red">*</span>课程简介
               </label>
               <div class="layui-input-inline">
-                  <input type="password" id="L_repass" name="repass" required="" lay-verify="repass"
-                  autocomplete="off" class="layui-input">
+                  <textarea name="courseDesc" placeholder="请输入课程简介" required="" class="layui-textarea"></textarea>
               </div>
           </div>
           <div class="layui-form-item">
-              <label for="L_repass" class="layui-form-label">
+              <label class="layui-form-label">
               </label>
               <button  class="layui-btn" lay-filter="add" lay-submit="">
                   增加
               </button>
           </div>
       </form>
-    </div>
-    <script>
-        layui.use(['form','layer'], function(){
-            $ = layui.jquery;
+  </div>
+  <script>
+      layui.use(['form','layer'], function(){
+          $ = layui.jquery;
           var form = layui.form
-          ,layer = layui.layer;
-        
+              ,layer = layui.layer;
+
           //自定义验证规则
           form.verify({
-            nikename: function(value){
-              if(value.length < 5){
-                return '昵称至少得5个字符啊';
+              courseName: function(value){
+                  if(value.length < 2 || value.length > 10){
+                      return '课程名字的长度不符合规则(2~10位)';
+                  }
               }
-            }
-            ,pass: [/(.+){6,12}$/, '密码必须6到12位']
-            ,repass: function(value){
-                if($('#L_pass').val()!=$('#L_repass').val()){
-                    return '两次密码不一致';
-                }
-            }
+              ,coursePrice: function (value) {
+                  let price = parseFloat(value)
+                  if(price <= 0){
+                      return '课程价格不正确!';
+                  }
+              }
+              ,courseCount: function (value) {
+                  let count = parseFloat(value)
+                  if(count <= 0){
+                      return '课时不正确!';
+                  }
+              }
           });
 
           //监听提交
           form.on('submit(add)', function(data){
-            console.log(data);
-            //发异步，把数据提交给php
-            layer.alert("增加成功", {icon: 6},function () {
-                // 获得frame索引
-                var index = parent.layer.getFrameIndex(window.name);
-                //关闭当前frame
-                parent.layer.close(index);
-            });
-            return false;
+              //发异步，把数据提交给java
+              $.ajax({
+                  type:"post",
+                  url:"${pageContext.request.contextPath}/course/add",
+                  data: data.field,
+                  dataType:"json",
+                  success:function (data) {
+                      // console.log(data);
+                      layer.alert(data.msg, {icon: 6},function () {
+                          // 获得frame索引
+                          var index = parent.layer.getFrameIndex(window.name);
+                          //关闭当前frame
+                          parent.layer.close(index);
+                          // 刷新列表
+                          parent.location.replace(parent.location.href);
+                      });
+                  }
+              })
+
+              return false;
           });
-          
-          
-        });
-    </script>
+
+
+      });
+  </script>
 
   </body>
 
