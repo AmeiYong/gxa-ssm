@@ -1,5 +1,2 @@
-<html>
-<body>
-<h2>Hello World!1111</h2>
-</body>
-</html>
+<%@page contentType="text/html; charset=utf-8"  language="java" isELIgnored="false" %><!doctype html>
+<jsp:forward page="/index"></jsp:forward>
